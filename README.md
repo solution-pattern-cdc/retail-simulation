@@ -1,4 +1,6 @@
-### retail-simulation Project
+### retail-simulation
 
-Simulator for customer, product, sale records.
+Generates sale records in the retail database.
+
+The URL for the Swagger UI of the REST API: `q/swagger-ui` 
 
