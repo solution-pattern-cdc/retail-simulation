@@ -24,21 +24,33 @@ public class SimulatorService {
     private final Random random = new Random();
 
     @Transactional
-    public void simulate(int count) {
+    public String simulate(Long customer, Integer count) {
         getCustomers();
         getProducts();
         log.info("Found " + customers.size() + " customers");
         log.info("Found " + products.size() + " products");
-        log.info("Generating " + count + " sales");
+        if (count == null) {
+            count = 0;
+        }
+        long customerId;
+        if (customer == null) {
+            customerId = randomCustomer();
+        } else {
+            customerId = customers.stream().map(c -> c.customerId).filter(l -> l.equals(customer)).findFirst().orElseGet(this::randomCustomer);
+        }
+        log.info("Generating " + count + " sales for customer " + customerId);
         for (int i = 0; i < count; i++) {
-            createSale();
+            createSale(customerId);
         }
         log.info("Complete!");
+        return "Generated " + count + " sales for customer " + customerId;
     }
 
-    private void createSale() {
-        long customer = customers.get(random.nextInt(customers.size() - 1)).customerId;
-        log.info("Creating sale for customer " + customer);
+    private long randomCustomer() {
+        return customers.get(random.nextInt(customers.size() - 1)).customerId;
+    }
+
+    private void createSale(long customer) {
         Sale sale = new Sale.Builder().customer(customer).date(new Date()).build();
         sale.persist();
         int numProducts = random.nextInt(5) + 1;

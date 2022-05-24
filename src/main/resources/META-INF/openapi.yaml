@@ -12,7 +12,11 @@ paths:
             schema:
               type: string
             examples:
-              simulate example:
+              customer:
+                value:
+                  customer: 1015
+                  count: 5
+              random customer:
                 value:
                   count: 5
         required: true
